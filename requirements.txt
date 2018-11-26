@@ -1,0 +1,2 @@
+APScheduler==3.5.3
+telepot==12.7

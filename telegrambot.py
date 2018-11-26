@@ -3,12 +3,16 @@ import os
 import ast
 import telepot
 
+from apscheduler.schedulers.blocking import BlockingScheduler
+
 
 token = '709434769:AAHiglAptFiOEELiwfkbLcF4xWcyvqUUJeo'
 UPDATE_ID = 0
 TelegramBot = telepot.Bot(token)
+sched = BlockingScheduler()
 
 
+@sched.scheduled_job('cron', day_of_week='mon-sun', hour=3)
 def get_group_history(UPDATE_ID):
     tmp_file = open('history.txt', 'a')
     tmp_history = TelegramBot.getUpdates(offset=UPDATE_ID)
@@ -74,4 +78,4 @@ def print_msg(msg):
 
 
 
-get_group_history(UPDATE_ID)
+sched.start()
