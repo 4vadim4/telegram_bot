@@ -54,8 +54,6 @@ def parse_history():
             else:
                 users_dict_activity[user] += 1
 
-    os.remove('history.txt')
-
     get_activity_persent(users_dict_activity, sum_line)
 
 
@@ -72,6 +70,7 @@ def build_stat_message(users_dict_activity, activity_percent, sum_line):
     user_sort_by_activity = sorted(activity_percent.items(), key=lambda kv: kv[1])
     user_sort_by_activity.reverse()
     msg = ' активность в чате c %s:\n -= %d сообщений =-\n' % (get_stat_begin_data(), sum_line)
+    os.remove('history.txt')
 
     for user_stat in user_sort_by_activity:
         user_data = TelegramBot.getChatMember(chat_id='-1001138432342', user_id=user_stat[0])
