@@ -1,28 +1,39 @@
 # -*- coding: utf-8 -*-
 import os
 import ast
+import time
 import telepot
 
-from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 
 
-TOKEN = '709434769:AAHiglAptFiOEELiwfkbLcF4xWcyvqUUJeo'
-UPDATE_ID = 0
-TelegramBot = telepot.Bot(TOKEN)
-sched = BlockingScheduler()
+token = '709434769:AAHiglAptFiOEELiwfkbLcF4xWcyvqUUJeo'
+update_id = 0
+TelegramBot = telepot.Bot(token)
 
 
-@sched.scheduled_job('cron', day_of_week='mon-sun', hour=10, minute=37)
-def get_group_history(UPDATE_ID):
-    tmp_history = TelegramBot.getUpdates(offset=UPDATE_ID)
-    NEXT_UPDATE_ID = tmp_history[-1]['update_id']
+def get_stat_begin_data():
+    with open('history.txt', 'r') as tmp_file:
+        first_line = tmp_file.readline()
+
+    record = ast.literal_eval(first_line)
+    begin_data = time.ctime(record['message']['date'])
+    begin_data_time = time.strptime(begin_data)
+    begin_data_str = time.strftime("%d %B %Y - %H:%M:%S", begin_data_time)
+
+    return begin_data_str
+
+
+def get_group_history(update_id):
+    tmp_history = TelegramBot.getUpdates(offset=update_id)
+    next_update_id = tmp_history[-1]['update_id'] + 1
     length_tmp_history = len(tmp_history)
 
     with open('history.txt', 'a') as tmp_file:
         for record in tmp_history:
             tmp_file.write(str(record) + '\n')
 
-    get_group_history(NEXT_UPDATE_ID + 1) if length_tmp_history == 100 else parse_history()
+    get_group_history(next_update_id) if length_tmp_history == 100 else parse_history()
 
 
 def parse_history():
@@ -60,7 +71,7 @@ def get_activity_persent(users_dict_activity, sum_line):
 def build_stat_message(users_dict_activity, activity_percent, sum_line):
     user_sort_by_activity = sorted(activity_percent.items(), key=lambda kv: kv[1])
     user_sort_by_activity.reverse()
-    msg = ' активность в чате за последние 24 (в тест режиме меньше) часа:\n -= %d сообщений =-\n' % sum_line
+    msg = ' активность в чате c %s:\n -= %d сообщений =-\n' % (get_stat_begin_data(), sum_line)
 
     for user_stat in user_sort_by_activity:
         user_data = TelegramBot.getChatMember(chat_id='-1001138432342', user_id=user_stat[0])
@@ -72,8 +83,15 @@ def build_stat_message(users_dict_activity, activity_percent, sum_line):
 
 def print_msg(msg):
     TelegramBot.sendMessage(chat_id='-1001138432342', text=msg)
-    # print(msg)
 
 
-sched.start()
-# get_group_history(UPDATE_ID)
+if __name__ == '__main__':
+    sched = BackgroundScheduler()
+
+    sched.add_job(get_group_history, 'cron', [update_id], hour=2)
+    sched.start()
+    try:
+        while True:
+            time.sleep(5)
+    except (KeyboardInterrupt, SystemExit):
+        TelegramBot.sendMessage(chat_id='-1001138432342', text='ВНИМАНИЕ!!!\n Принудительное завершение или сбой на платформе Heroku. Сбор статистики остановлен!')
