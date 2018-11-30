@@ -26,8 +26,8 @@ def get_stat_begin_data():
 
 def get_group_history(update_id):
     tmp_history = TelegramBot.getUpdates(offset=update_id)
-    next_update_id = tmp_history[-1]['update_id'] + 1
     length_tmp_history = len(tmp_history)
+    next_update_id = tmp_history[-1]['update_id'] + 1 if length_tmp_history != 0 else 0
 
     with open('history.txt', 'a') as tmp_file:
         for record in tmp_history:
@@ -69,7 +69,7 @@ def get_activity_persent(users_dict_activity, sum_line):
 def build_stat_message(users_dict_activity, activity_percent, sum_line):
     user_sort_by_activity = sorted(activity_percent.items(), key=lambda kv: kv[1])
     user_sort_by_activity.reverse()
-    msg = ' активность в чате c %s:\n -= %d сообщений =-\n' % (get_stat_begin_data(), sum_line)
+    msg = ' активность в чате c %s:\n -= %d сообщений =-\n' % (get_stat_begin_data() if sum_line != 0 else '- нет активности за последние 24ч. -', sum_line)
     os.remove('history.txt')
 
     for user_stat in user_sort_by_activity:
