@@ -86,7 +86,7 @@ def print_msg(msg):
 if __name__ == '__main__':
     sched = BackgroundScheduler()
 
-    sched.add_job(get_group_history, 'cron', [update_id], hour=18, minute=37)
+    sched.add_job(get_group_history, 'cron', [update_id], hour=2)
     sched.start()
     try:
         while True:
