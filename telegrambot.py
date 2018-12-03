@@ -69,7 +69,7 @@ def get_activity_persent(users_dict_activity, sum_line):
 def build_stat_message(users_dict_activity, activity_percent, sum_line):
     user_sort_by_activity = sorted(activity_percent.items(), key=lambda kv: kv[1])
     user_sort_by_activity.reverse()
-    msg = ' активность в чате c %s:\n -= %d сообщений =-\n' % (get_stat_begin_data() if sum_line != 0 else '- нет активности за последние 24ч. -', sum_line)
+    msg = ' активность в чате за последние 24 часа ( %s ):\n -= %d сообщений =-\n' % (get_stat_begin_data() if sum_line != 0 else '- нет активности -', sum_line)
     os.remove('history.txt')
 
     for user_stat in user_sort_by_activity:
@@ -86,10 +86,10 @@ def print_msg(msg):
 if __name__ == '__main__':
     sched = BackgroundScheduler()
 
-    sched.add_job(get_group_history, 'cron', [update_id], hour=17, minute=30)
+    sched.add_job(get_group_history, 'cron', [update_id], hour=17, minute=56)
     sched.start()
-    try:
-        while True:
-            time.sleep(200)
-    except (KeyboardInterrupt, SystemExit):
-        TelegramBot.sendMessage(chat_id='-1001138432342', text='ВНИМАНИЕ!!!\n Принудительное завершение или сбой на платформе Heroku. Сбор статистики остановлен!')
+    # try:
+    #     while True:
+    #         time.sleep(200)
+    # except (KeyboardInterrupt, SystemExit):
+    #     TelegramBot.sendMessage(chat_id='-1001138432342', text='ВНИМАНИЕ!!!\n Принудительное завершение или сбой на платформе Heroku. Сбор статистики остановлен!')
