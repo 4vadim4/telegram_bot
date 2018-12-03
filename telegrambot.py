@@ -25,7 +25,7 @@ def get_stat_begin_data():
 
 
 def get_group_history(update_id):
-    tmp_history = TelegramBot.getUpdates(offset=update_id, timeout=100)
+    tmp_history = TelegramBot.getUpdates(offset=update_id, timeout=60)
     length_tmp_history = len(tmp_history)
     next_update_id = tmp_history[-1]['update_id'] + 1 if length_tmp_history != 0 else 0
 
@@ -86,10 +86,11 @@ def print_msg(msg):
 if __name__ == '__main__':
     sched = BackgroundScheduler()
 
-    sched.add_job(get_group_history, 'cron', [update_id], hour=17, minute=56)
+    sched.add_job(get_group_history, 'cron', [update_id], hour=18, minute=30)
     sched.start()
-    # try:
-    #     while True:
-    #         time.sleep(200)
-    # except (KeyboardInterrupt, SystemExit):
-    #     TelegramBot.sendMessage(chat_id='-1001138432342', text='ВНИМАНИЕ!!!\n Принудительное завершение или сбой на платформе Heroku. Сбор статистики остановлен!')
+    try:
+        while True:
+            time.sleep(1)
+    except (KeyboardInterrupt, SystemExit):
+        TelegramBot.sendMessage(chat_id='-1001138432342', text='ВНИМАНИЕ!!!\n Принудительное завершение или сбой на платформе Heroku. Сбор статистики остановлен!')
+        # print('qqq')
