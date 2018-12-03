@@ -13,7 +13,7 @@ bot = telepot.Bot(TOKEN)
 def get_data(city):
     request_str = 'http://api.openweathermap.org/data/2.5/weather?q=%s&APPID=c387e9eac059a7bf80345a729f18ea9c' % city
     response = requests.get(request_str).json()
-    weather_msg = '%s, температура: %s \N{DEGREE SIGN}C, влажность: %d %%, скорость ветра: %d м/с, давление: %.2f мм.рт.ст., %s' % (
+    weather_msg = '%s, температура: %.1f \N{DEGREE SIGN}C, влажность: %d %%, скорость ветра: %d м/с, давление: %.2f мм.рт.ст., %s' % (
         response['name'], response['main']['temp'] - 273.15, response['main']['humidity'],
         response['wind']['speed'], response['main']['pressure'] * 0.75, response['weather'][0]['description'])
 
