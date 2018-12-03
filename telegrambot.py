@@ -69,7 +69,7 @@ def get_activity_persent(users_dict_activity, sum_line):
 def build_stat_message(users_dict_activity, activity_percent, sum_line):
     user_sort_by_activity = sorted(activity_percent.items(), key=lambda kv: kv[1])
     user_sort_by_activity.reverse()
-    msg = ' активность в чате за последние 24 часа ( %s ):\n -= %d сообщений =-\n' % (get_stat_begin_data() if sum_line != 0 else '- нет активности -', sum_line)
+    msg = ' активность в чате за последние 24 часа ( первое: %s ):\n -= %d сообщений =-\n' % (get_stat_begin_data() if sum_line != 0 else '- нет активности -', sum_line)
     os.remove('history.txt')
 
     for user_stat in user_sort_by_activity:
