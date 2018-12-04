@@ -106,10 +106,10 @@ if __name__ == '__main__':
     # weather = Weather(token)
     sched = BackgroundScheduler()
 
-    sched.add_job(activity.get_group_history, 'cron', hour=13, minute=17)
+    sched.add_job(activity.get_group_history, 'cron', hour=13, minute=23)
     sched.start()
 
-    MessageLoop(activity.bot, activity.handle).run_as_thread()
+    # MessageLoop(activity.bot, activity.handle).run_as_thread()
 
     try:
         while True:
