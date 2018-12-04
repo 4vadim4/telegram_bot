@@ -31,7 +31,7 @@ class ActivityInfo(object):
     def get_group_history(self):
         tmp_history = self.bot.getUpdates(timeout=60)
         length_tmp_history = len(tmp_history)
-        next_update_id = tmp_history[-1]['update_id'] + 1 if length_tmp_history != 0 else 0
+        # next_update_id = tmp_history[-1]['update_id'] + 1 if length_tmp_history != 0 else 0
 
         with open('history.txt', 'a') as tmp_file:
             for record in tmp_history:
@@ -112,7 +112,7 @@ if __name__ == '__main__':
     weather = Weather(token)
     sched = BackgroundScheduler()
 
-    sched.add_job(activity.get_group_history, 'cron', [update_id], hour=13, minute=7)
+    sched.add_job(activity.get_group_history, 'cron', hour=13, minute=7)
     sched.start()
 
     MessageLoop(weather.bot, weather.handle).run_as_thread()
