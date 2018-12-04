@@ -28,8 +28,8 @@ class ActivityInfo(object):
 
         return begin_data_str
 
-    def get_group_history(self, update_id):
-        tmp_history = self.bot.getUpdates(offset=update_id, timeout=60)
+    def get_group_history(self):
+        tmp_history = self.bot.getUpdates(timeout=60)
         length_tmp_history = len(tmp_history)
         next_update_id = tmp_history[-1]['update_id'] + 1 if length_tmp_history != 0 else 0
 
@@ -37,7 +37,8 @@ class ActivityInfo(object):
             for record in tmp_history:
                 tmp_file.write(str(record) + '\n')
 
-        self.get_group_history(next_update_id) if length_tmp_history == 100 else self.parse_history()
+        # self.get_group_history(next_update_id) if length_tmp_history == 100 else self.parse_history()
+        self.parse_history()
 
     def parse_history(self):
         with open('history.txt', 'r') as tmp_file:
