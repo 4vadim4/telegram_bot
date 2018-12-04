@@ -112,7 +112,7 @@ if __name__ == '__main__':
     weather = Weather(token)
     sched = BackgroundScheduler()
 
-    sched.add_job(activity.get_group_history, 'cron', hour=13, minute=7)
+    sched.add_job(activity.get_group_history, 'cron', hour=13, minute=13)
     sched.start()
 
     MessageLoop(weather.bot, weather.handle).run_as_thread()
