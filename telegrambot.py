@@ -80,12 +80,6 @@ class ActivityInfo(object):
     def print_msg(self):
         self.bot.sendMessage(chat_id='-1001138432342', text=self.msg)
 
-
-class Weather(object):
-
-    def __init__(self, token):
-        self.bot = telepot.Bot(token)
-
     def get_data(self, city):
         response = requests.get(weather_json %(city, appid)).json()
         return msg_weather % (response['name'], response['main']['temp'] - 273.15, response['main']['humidity'],
@@ -109,13 +103,13 @@ class Weather(object):
 
 if __name__ == '__main__':
     activity = ActivityInfo(token)
-    weather = Weather(token)
+    # weather = Weather(token)
     sched = BackgroundScheduler()
 
-    sched.add_job(activity.get_group_history, 'cron', hour=13, minute=13)
+    sched.add_job(activity.get_group_history, 'cron', hour=13, minute=17)
     sched.start()
 
-    MessageLoop(weather.bot, weather.handle).run_as_thread()
+    MessageLoop(activity.bot, activity.handle).run_as_thread()
 
     try:
         while True:
