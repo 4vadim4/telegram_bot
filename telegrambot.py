@@ -3,10 +3,8 @@ import os
 import ast
 import time
 import telepot
-import requests
-from telepot.loop import MessageLoop
 from apscheduler.schedulers.background import BackgroundScheduler
-from config import token, appid, update_id, chat_id, weather_json, msg_weather, msg_error, msg_activity
+from config import token, update_id, chat_id, msg_error, msg_activity
 
 
 class ActivityInfo(object):
@@ -28,17 +26,16 @@ class ActivityInfo(object):
 
         return begin_data_str
 
-    def get_group_history(self):
-        tmp_history = self.bot.getUpdates(timeout=60)
+    def get_group_history(self, update_id):
+        tmp_history = self.bot.getUpdates(update_id, timeout=60)
         length_tmp_history = len(tmp_history)
-        # next_update_id = tmp_history[-1]['update_id'] + 1 if length_tmp_history != 0 else 0
+        next_update_id = tmp_history[-1]['update_id'] + 1 if length_tmp_history != 0 else 0
 
         with open('history.txt', 'a') as tmp_file:
             for record in tmp_history:
                 tmp_file.write(str(record) + '\n')
 
-        # self.get_group_history(next_update_id) if length_tmp_history == 100 else self.parse_history()
-        self.parse_history()
+        self.get_group_history(next_update_id) if length_tmp_history == 100 else self.parse_history()
 
     def parse_history(self):
         with open('history.txt', 'r') as tmp_file:
@@ -80,36 +77,13 @@ class ActivityInfo(object):
     def print_msg(self):
         self.bot.sendMessage(chat_id='-1001138432342', text=self.msg)
 
-    def get_data(self, city):
-        response = requests.get(weather_json %(city, appid)).json()
-        return msg_weather % (response['name'], response['main']['temp'] - 273.15, response['main']['humidity'],
-            response['wind']['speed'], response['main']['pressure'] * 0.75, response['weather'][0]['description'])
-
-    def handle(self, msg):
-        content_type, chat_type, chat_id = telepot.glance(msg)
-        if content_type == 'text' and msg['text'].lower() == '.погода':
-            weather_msg = self.get_data('Minsk')
-            self.bot.sendMessage(chat_id, weather_msg)
-
-        elif content_type == 'text' and msg['text'].lower() == '.погодам':
-            weather_msg = self.get_data('Moscow')
-            self.bot.sendMessage(chat_id, weather_msg)
-
-        elif content_type == 'text' and msg['text'].lower() == '.погодал':
-            weather_msg = self.get_data('Lyubertsy')
-            self.bot.sendMessage(chat_id, weather_msg)
-
-
 
 if __name__ == '__main__':
     activity = ActivityInfo(token)
-    # weather = Weather(token)
     sched = BackgroundScheduler()
 
-    sched.add_job(activity.get_group_history, 'cron', hour=14, minute=7)
+    sched.add_job(activity.get_group_history, 'cron', [update_id], hour=14, minute=25)
     sched.start()
-
-    # MessageLoop(activity.bot, activity.handle).run_as_thread()
 
     try:
         while True:
