@@ -20,6 +20,8 @@ class ActivityInfo(object):
             first_line = tmp_file.readline()
 
         record = ast.literal_eval(first_line)
+        if 'edited_message' in record.keys():
+            record['message'] = record.pop('edited_message')
         begin_data = time.ctime(record['message']['date'])
         begin_data_time = time.strptime(begin_data)
         begin_data_str = time.strftime("%d %B %Y - %H:%M:%S", begin_data_time)
@@ -64,12 +66,13 @@ class ActivityInfo(object):
     def build_stat_message(self):
         user_sort_by_activity = sorted(self.activity_percent.items(), key=lambda kv: kv[1])
         user_sort_by_activity.reverse()
-        self.msg =  msg_activity % (self.get_stat_begin_data() if self.sum_line != 0 else '- нет активности -', self.sum_line)
+        self.msg = msg_activity % (self.get_stat_begin_data() if self.sum_line != 0 else '- нет активности -', self.sum_line)
         os.remove('history.txt')
 
         for user_stat in user_sort_by_activity:
             user_data = self.bot.getChatMember(chat_id='-1001138432342', user_id=user_stat[0])
-            extra_msg = '- %s %s -> %d сообщений ( %.2f %% )\n' % (user_data['user']['first_name'], user_data['user'].get('last_name', 'Unknown'), self.users_dict_activity.get(user_data['user']['id']), user_stat[1])
+            extra_msg = '- %s %s -> %d сообщений ( %.2f %% )\n' % (user_data['user']['first_name'], user_data['user'].get('last_name', 'Unknown'),
+                                                                   self.users_dict_activity.get(user_data['user']['id']), user_stat[1])
             self.msg += extra_msg
 
         self.print_msg()
@@ -82,7 +85,7 @@ if __name__ == '__main__':
     activity = ActivityInfo(token)
     sched = BackgroundScheduler()
 
-    sched.add_job(activity.get_group_history, 'cron', [update_id], hour=14, minute=25)
+    sched.add_job(activity.get_group_history, 'cron', [update_id], hour=1)
     sched.start()
 
     try:
