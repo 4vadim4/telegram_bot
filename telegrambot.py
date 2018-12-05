@@ -85,7 +85,7 @@ if __name__ == '__main__':
     activity = ActivityInfo(token)
     sched = BackgroundScheduler()
 
-    sched.add_job(activity.get_group_history, 'cron', [update_id], hour=1)
+    sched.add_job(activity.get_group_history, 'cron', [update_id], hour=6)
     sched.start()
 
     try:
