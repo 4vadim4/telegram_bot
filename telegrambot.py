@@ -66,7 +66,7 @@ class ActivityInfo(object):
     def build_stat_message(self):
         user_sort_by_activity = sorted(self.activity_percent.items(), key=lambda kv: kv[1])
         user_sort_by_activity.reverse()
-        self.msg = msg_activity % (self.get_stat_begin_data() if self.sum_line != 0 else '- нет активности -', self.sum_line)
+        self.msg = msg_activity % (self.sum_line, self.get_stat_begin_data() if self.sum_line != 0 else '- нет активности -')
         os.remove('history.txt')
 
         for user_stat in user_sort_by_activity:
