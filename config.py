@@ -1,8 +1,11 @@
-token = '709434769:AAHiglAptFiOEELiwfkbLcF4xWcyvqUUJeo'
+import os
+
+
+token = os.environ.get('BOT_TOKEN')
+
+chat_id = os.environ.get('CHAT_ID')
 
 appid = 'c387e9eac059a7bf80345a729f18ea9c'
-
-chat_id = '-1001138432342'
 
 update_id = 0
 
@@ -12,4 +15,4 @@ msg_weather = '%s, температура: %.1f \N{DEGREE SIGN}C, влажнос
 
 msg_error = 'ВНИМАНИЕ!!!\n Принудительное завершение или сбой на платформе Heroku.'
 
-msg_activity = 'зафиксировано -= %d сообщений =- за последние 24 часа\n ( первое: %s ):\n '
+msg_activity = 'зафиксировано %d сообщений за последние 24 часа\n ( первое: %s ):\n'
