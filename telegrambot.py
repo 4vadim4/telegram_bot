@@ -78,7 +78,7 @@ class ActivityInfo(object):
         self.print_msg()
 
     def print_msg(self):
-        self.bot.sendMessage(chat_id='-1001138432342', text=self.msg)
+        self.bot.sendMessage(chat_id=chat_id, text=self.msg)
 
 
 if __name__ == '__main__':
