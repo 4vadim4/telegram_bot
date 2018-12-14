@@ -70,7 +70,7 @@ class ActivityInfo(object):
         os.remove('history.txt')
 
         for user_stat in user_sort_by_activity:
-            user_data = self.bot.getChatMember(chat_id='-1001138432342', user_id=user_stat[0])
+            user_data = self.bot.getChatMember(chat_id=chat_id, user_id=user_stat[0])
             extra_msg = '- %s %s -> %d сообщений ( %.2f %% )\n' % (user_data['user']['first_name'], user_data['user'].get('last_name', 'Unknown'),
                                                                    self.users_dict_activity.get(user_data['user']['id']), user_stat[1])
             self.msg += extra_msg
