@@ -4,7 +4,7 @@ import ast
 import time
 import telepot
 from apscheduler.schedulers.background import BackgroundScheduler
-from config import token, update_id, chat_id, msg_error, msg_activity
+from config import token, update_id, chat_id, msg_error, msg_activity, text, text1, text2, text3
 
 
 class ActivityInfo(object):
@@ -80,12 +80,19 @@ class ActivityInfo(object):
     def print_msg(self):
         self.bot.sendMessage(chat_id=chat_id, text=self.msg)
 
+    def print_shed_msg(self, msg):
+        self.bot.sendMessage(chat_id=chat_id, text=msg)
+
 
 if __name__ == '__main__':
     activity = ActivityInfo(token)
     sched = BackgroundScheduler()
 
     sched.add_job(activity.get_group_history, 'cron', [update_id], hour=6)
+    sched.add_job(activity.print_shed_msg, 'date', run_date='2018-12-31 23:57:00', args=[text3], id='shed_msg3')
+    sched.add_job(activity.print_shed_msg, 'date', run_date='2018-12-31 23:58:00', args=[text2], id='shed_msg2')
+    sched.add_job(activity.print_shed_msg, 'date', run_date='2018-12-31 23:59:00', args=[text1], id='shed_msg1')
+    sched.add_job(activity.print_shed_msg, 'date', run_date='2019-01-01 00:00:30', args=[text], id='shed_msg')
     sched.start()
 
     try:
